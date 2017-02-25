@@ -48,7 +48,7 @@ try:
                 # create the file if it doesn't exist
                 tts = gTTS(text=code, lang='en')
                 tts.save(filename)
-                time.sleep(3)
+                time.sleep(5)
                 mixer.music.load(filename)
                 mixer.music.play()
 
