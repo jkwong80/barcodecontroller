@@ -1,7 +1,10 @@
 # import pyttsx
 from pygame import mixer
-import string
+from gtts import gTTS
+import os, sys, string, time
 
+
+soundfile_directory = 'soundfiles'
 key_sound_map = {}
 key_sound_map['littledrummerboysong'] = 'Bing Crosby - The Little Drummer Boy (1962).mp3'
 key_sound_map['puffmagicdragon'] = 'Peter Paul & Mary - Puff The Magic Dragon.mp3'
@@ -29,13 +32,26 @@ try:
         code = raw_input("Scan: ")
         # do something with the scanned code
         if code in key_sound_map:
-            mixer.music.load(key_sound_map[code])
+            mixer.music.load(os.path.join(soundfile_directory, key_sound_map[code]))
             mixer.music.play()
             print('Playing %s' %key_sound_map[code])
-        if code == 'stop':
+        elif code == 'stop':
             mixer.music.stop()
-        if code == 'pause':
+        elif code == 'pause':
             mixer.music.pause()
+        else:
+            filename = os.path.join(soundfile_directory, "%s.mp3" % code)
+            if os.path.exists(filename):
+                mixer.music.load(filename)
+                mixer.music.play()
+            else:
+                # create the file if it doesn't exist
+                tts = gTTS(text=code, lang='en')
+                tts.save(filename)
+                time.sleep(3)
+                mixer.music.load(filename)
+                mixer.music.play()
+
 except KeyboardInterrupt:
     print "\nExit"
 
